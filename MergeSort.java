@@ -3,51 +3,44 @@
 import java.util.ArrayList;
 
 public class MergeSort {
-    
-    //Métodos
-    public ArrayList<Integer> mergeSort(ArrayList<Integer> arr){
-        if(arr.size() == 1){
-            return arr;
+
+    // Divide el arreglo, ordena cada mitad y después las combina.
+    public ArrayList<Integer> mergeSort(ArrayList<Integer> lista){
+        if(lista.size() <= 1){
+            return lista;
         }
 
-        //Dividir
-        int mid = arr.size() / 2;
-        ArrayList<Integer> arr_izq = new ArrayList<>(arr.subList(0, mid));
-        ArrayList<Integer> arr_der = new ArrayList<>(arr.subList(mid, arr.size()));
+        int mitad = lista.size() / 2;
+        ArrayList<Integer> izquierda = new ArrayList<>(lista.subList(0, mitad));
+        ArrayList<Integer> derecha = new ArrayList<>(lista.subList(mitad, lista.size()));
 
-        //Conquistar Recursivamente
-        ArrayList<Integer> izq_ordenado = mergeSort(arr_izq);
-        ArrayList<Integer> der_ordenado = mergeSort(arr_der);
+        ArrayList<Integer> izquierdaOrdenada = mergeSort(izquierda);
+        ArrayList<Integer> derechaOrdenada = mergeSort(derecha);
 
-        //Combinar
-        return Merge(izq_ordenado, der_ordenado);
+        return combinar(izquierdaOrdenada, derechaOrdenada);
     }
 
-    private ArrayList<Integer> Merge(ArrayList<Integer> arr_izq, ArrayList<Integer> arr_der){
-        ArrayList<Integer> arr_res = new ArrayList<>();
-        while(!arr_izq.isEmpty() && !arr_der.isEmpty()){
+    private ArrayList<Integer> combinar(ArrayList<Integer> izquierda,
+            ArrayList<Integer> derecha){
+        ArrayList<Integer> resultado = new ArrayList<>();
+        while(!izquierda.isEmpty() && !derecha.isEmpty()){
 
-            int selNum;
-            if(arr_izq.get(0) > arr_der.get(0)){
-                selNum = arr_der.remove(0);
+            if(izquierda.get(0) <= derecha.get(0)){
+                resultado.add(izquierda.remove(0));
             }
             else{
-                selNum = arr_izq.remove(0);
+                resultado.add(derecha.remove(0));
             }
-            arr_res.add(selNum);
         }
 
-        while(!arr_izq.isEmpty()){
-            int num_izq = arr_izq.remove(0);
-            arr_res.add(num_izq);
+        while(!izquierda.isEmpty()){
+            resultado.add(izquierda.remove(0));
         }
 
-        while(!arr_der.isEmpty()){
-            int num_der = arr_der.remove(0);
-            arr_res.add(num_der);
+        while(!derecha.isEmpty()){
+            resultado.add(derecha.remove(0));
         }
 
-        return arr_res;
+        return resultado;
     }
-    
 }

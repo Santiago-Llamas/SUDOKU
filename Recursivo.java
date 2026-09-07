@@ -1,44 +1,45 @@
 
 public class Recursivo {
-    
-    public int factIFr(int num){
-        if(num == 1){
-            return 1;
+
+    // Recursividad directa: el método se llama a sí mismo.
+    public int fibonacci(int num){
+        if(num < 0){
+            throw new IllegalArgumentException("El indice no puede ser negativo");
         }
-        else{
-            return num * factIFr(num-1);
+        if(num == 0 || num == 1){
+            return num;
         }
+        return fibonacci(num - 1) + fibonacci(num - 2);
     }
 
-    public int factSWITCHr(int num){
-        switch(num){
-            case 1:
-                return 1;
-            //break;
-            default:
-                return num * factSWITCHr(num-1);
-            //break;
+    public boolean sumaSubconjunto(int[] conjunto, int indice, int objetivo){
+        if(objetivo == 0){
+            return true;
         }
-    }
-    
-    public int fibbonacci(int num){
-        switch(num){
-            case 0:
-                return 0;
-            case 1:
-                return 1;
-            default:
-                return fibbonacci(num-1)+fibbonacci(num-2);
+        if(indice == conjunto.length){
+            return false;
         }
-    }
-    public String esPalindromo(String palindromo) {
-    String invertido = new StringBuilder(palindromo).reverse().toString();
 
-    if (palindromo.equals(invertido)) {
-        return "La palabra " + palindromo + " si es Palindromo crack";
-    } else {
-        return "La palabra " + palindromo + " no es Palindromo crack";
-    }
+        return sumaSubconjunto(conjunto, indice + 1, objetivo - conjunto[indice])
+                || sumaSubconjunto(conjunto, indice + 1, objetivo);
     }
 
+    public boolean sumaSubconjunto(int[] conjunto, int objetivo){
+        return sumaSubconjunto(conjunto, 0, objetivo);
+    }
+
+    // Recursividad indirecta: estos métodos se llaman entre sí.
+    public boolean esPar(int num){
+        if(num == 0){
+            return true;
+        }
+        return esImpar(Math.abs(num) - 1);
+    }
+
+    public boolean esImpar(int num){
+        if(num == 0){
+            return false;
+        }
+        return esPar(Math.abs(num) - 1);
+    }
 }

@@ -1,73 +1,53 @@
 
 public class BackTracking {
-    
-    //Función que revisa si es seguro
-    //Poner una reina en el tablero[row][col]
-    static boolean esSeguro(int[][] tablero, int row, int col){
-        int n = tablero.length;
-        int i, j;
-
-        //Revisar la columna desde arriba
-        for(i = 0; i < row; i++){
-            if (tablero[i][col] == 1){
+    static boolean esValidoSudoku(int[][] tablero, int fila, int columna, int numero){
+        for(int i = 0; i < 9; i++){
+            if(tablero[fila][i] == numero || tablero[i][columna] == numero){
                 return false;
             }
         }
 
-        //Revisar la diagonal del lado izquierdo
-        for(i=row-1, j = col-1; i >=0 && j >= 0; i--, j--){
-            if(tablero[i][j] == 1){
-                return false;
+        int inicioFila = fila - fila % 3;
+        int inicioColumna = columna - columna % 3;
+        for(int i = inicioFila; i < inicioFila + 3; i++){
+            for(int j = inicioColumna; j < inicioColumna + 3; j++){
+                if(tablero[i][j] == numero){
+                    return false;
+                }
             }
         }
-
-        //Revisar la diagonal del lado derecho
-        for(i = row - 1, j = col + 1; j < n && i >=0; i--, j++){
-            if(tablero[i][j] == 1){
-                return false;
-            }
-        }
-
         return true;
     }
 
-    static boolean ponReinas(int row, int[][] tablero){
-        int n = tablero.length;
+    public boolean resolverSudoku(int[][] tablero){
+        // Prueba un número y lo deshace cuando lleva a un camino inválido.
+        for(int fila = 0; fila < 9; fila++){
+            for(int columna = 0; columna < 9; columna++){
+                if(tablero[fila][columna] == 0){
+                    for(int numero = 1; numero <= 9; numero++){
+                        if(esValidoSudoku(tablero, fila, columna, numero)){
+                            tablero[fila][columna] = numero;
 
-        //caso base: si todas las reinas han
-        //sido colocadas, regresa true
-        if(row == n){
-            return true;
-        }
+                            if(resolverSudoku(tablero)){
+                                return true;
+                            }
 
-        //Considdera la fila e intenta poner
-        //una reina en todas las columnas una por una
-        for(int i = 0; i < n; i++){
-
-            //Revisa si la reina puede ser colocada
-            if(esSeguro(tablero, row, i)){
-                tablero[row][i] = 1;
-                if(ponReinas(row + 1, tablero)){
-                    return true;
+                            tablero[fila][columna] = 0;
+                        }
+                    }
+                    return false;
                 }
-                tablero[row][i] = 0;
-
             }
         }
-
-        return false;
+        return true;
     }
 
-    //Función para encontrar la solución
-    //al problema de las 8 reinas
-    public int[][] reinas(){
-        int n = 8;
-
-        //inicia el tablero
-        int[][] tablero = new int[n][n];
-
-        ponReinas(0, tablero);
-
-        return tablero;
+    public void imprimirSudoku(int[][] tablero){
+        for(int[] fila : tablero){
+            for(int numero : fila){
+                System.out.print(numero + " ");
+            }
+            System.out.println();
+        }
     }
 }
